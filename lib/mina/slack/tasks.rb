@@ -1,6 +1,7 @@
 require 'mina/hooks'
 require 'json'
 require 'net/http'
+require 'openssl'
 
 # Before and after hooks for mina deploy
 before_mina :deploy, :'slack:starting'
@@ -11,7 +12,7 @@ after_mina :deploy, :'slack:finished'
 namespace :slack do
 
   task :starting do
-    if slack_token and slack_room and slack_subdomain
+    if slack_url and slack_room
       announcement = "#{announced_deployer} is deploying #{announced_application_name} to #{announced_stage}"
 
       post_slack_message(announcement)
@@ -22,7 +23,7 @@ namespace :slack do
   end
 
   task :finished do
-    if slack_token and slack_room and slack_subdomain
+    if slack_url and slack_room
       end_time = Time.now
       start_time = fetch(:start_time)
       elapsed = end_time.to_i - start_time.to_i
@@ -58,18 +59,17 @@ namespace :slack do
 
   def post_slack_message(message)
     # Parse the URI and handle the https connection
-    uri = URI.parse("https://#{slack_subdomain}.slack.com/services/hooks/incoming-webhook?token=#{slack_token}")
+    uri = URI.parse(slack_url)
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
-    payload = {
-      "parse"       => "full",
-      "channel"     => slack_room,
-      "username"    => slack_username,
-      "text"        => message,
-      "icon_emoji"  => slack_emoji
-    }
+    payload = { }
+    payload['parse']   = 'full'
+    payload['channel'] = slack_room
+    payload['text']    = message
+    payload['username'] = slack_username if slack_username
+    payload['icon_emoji'] = slack_emoji if slack_emoji
 
     # Create the post request and setup the form data
     request = Net::HTTP::Post.new(uri.request_uri)

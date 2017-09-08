@@ -30,9 +30,8 @@ Include the recipe in your deploy.rb
 You'll need to setup your slack details with an API key, room and subdomain. You can add these as ENV variables or in the config/deploy.rb
 
     # required
-    set :slack_token, "webhook_token" # comes from inbound webhook integration
+    set :slack_url, "webhook_url" # comes from inbound webhook integration
     set :slack_room, "#general" # the room to send the message to
-    set :slack_subdomain, "example" # if your subdomain is example.slack.com
 
     # optional
     set :slack_application, "Application Name" # override Capistrano `application`
