@@ -1,5 +1,6 @@
 # Required
-set_default :slack_url,       -> { ENV['SLACK_URL'] }
+set_default :slack_url,         -> { ENV['SLACK_URL'] }
+set_default :deployment_target, -> { ENV['DEPLOYMENT_TARGET'] }
 set_default :slack_room,        -> { ENV['SLACK_ROOM'] }
 set_default :slack_subdomain,   -> { ENV['SLACK_SUBDOMAIN'] }
 # Optional

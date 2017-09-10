@@ -13,7 +13,7 @@ namespace :slack do
 
   task :starting do
     if slack_url and slack_room
-      announcement = "#{announced_deployer} is deploying #{announced_application_name} to #{announced_stage}"
+      announcement = "#{announced_deployer} is deploying #{announced_application_name} env: #{announced_stage} on #{deployment_target}"
 
       post_slack_message(announcement)
       set(:start_time, Time.now)
