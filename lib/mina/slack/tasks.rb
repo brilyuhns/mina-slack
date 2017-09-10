@@ -42,7 +42,7 @@ namespace :slack do
   end
 
   def announced_deployer
-    deployer
+    deployer || %x(ssh-add -l).split("\n").first
   end
 
   def short_revision
